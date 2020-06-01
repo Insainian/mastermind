@@ -38,7 +38,7 @@ void Mastermind::codeBreaker()
   initializeAllPossibleSolutions();
 
   // Start loop (only 10 guesses)
-  for (int numGuess = 0; numGuess < 1; numGuess++)
+  for (int numGuess = 0; numGuess < 10; numGuess++)
   {
     // Get the next guess
     possibleSolutionIndex = getPossibleSolution();
@@ -55,7 +55,7 @@ void Mastermind::codeBreaker()
     cout << "Guess #" << numGuess + 1 << ": ";
     printSolution(possibleSolutions[possibleSolutionIndex].solution);
 
-    // record the solution
+    // Record the guess
     for (int i = 0; i < 4; i++)
     {
       gameRecord.entries[numGuess].guess[i] = possibleSolutions[possibleSolutionIndex].solution[i];
@@ -69,15 +69,13 @@ void Mastermind::codeBreaker()
     // If the code has been properly guessed,
     if (gameRecord.entries[numGuess].pegs.black == 4)
     {
-      // display the record of the game
+      // Display the record of the game
       cout << "Computer wins! Better luck next time!" << endl;
-      cout << "The following is the record of the game:" << endl;
-      gameRecord.print();
       return;
     }
 
     // Eliminate impossible solutions
-
+    eliminateImpossibleSolutions(gameRecord.entries[numGuess].guess, gameRecord.entries[numGuess].pegs);
   } // End loop
   giveUp(gameRecord);
   // fail
@@ -122,6 +120,18 @@ Mastermind::Pegs Mastermind::getUserPegs()
   return pegs;
 }
 
+void Mastermind::eliminateImpossibleSolutions(char guess[4], Pegs pegs)
+{
+  for (int i = 0; i < 1296; i++)
+  {
+    if (possibleSolutions[i].isPossible == true)
+    {
+      Pegs possiblePegs = calculatePegs(possibleSolutions[i].solution, guess);
+      possibleSolutions[i].isPossible = possiblePegs == pegs;
+    }
+  }
+}
+
 int Mastermind::getPossibleSolution()
 {
   for (int i = 0; i < 1296; i++)
@@ -164,7 +174,7 @@ Mastermind::Pegs Mastermind::calculatePegs(char solution[4], char guess[4])
 {
   Pegs pegs;
 
-  bool isSolutionUsed[4];
+  bool isSolutionUsed[4] = {false, false, false, false};
 
   // Find black-pegs first
   for (int g = 0; g < 4; g++)
@@ -181,13 +191,17 @@ Mastermind::Pegs Mastermind::calculatePegs(char solution[4], char guess[4])
   {
     // Skip if it is a black-peg
     if (guess[g] == solution[g])
+    {
       continue;
+    }
 
     for (int s = 0; s < 4; s++)
     {
       // A white-peg cannot be the same index, so skip if it is the same index
       if (s == g)
+      {
         continue;
+      }
 
       if (guess[g] == solution[s] && !isSolutionUsed[s])
       {

@@ -117,6 +117,8 @@ private:
 
     Pegs getUserPegs();
 
+    void eliminateImpossibleSolutions(char guess[4], Pegs pegs);
+
     PossibleSolution possibleSolutions[1296];
     int possibleSolutionCount;
 
