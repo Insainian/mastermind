@@ -46,6 +46,10 @@ public:
 
     void codeBreaker();
 
+    void codeMaker();
+
+    int numPossibleSolutions = 1296;
+
     static Pegs calculatePegs(char solution[], char guess[]);
 
     Mastermind();
@@ -123,6 +127,8 @@ private:
     int possibleSolutionCount;
 
     GameRecord gameRecord;
+
+    int getRandomSolutionIndex();
 
     static char colors[6];
 };
