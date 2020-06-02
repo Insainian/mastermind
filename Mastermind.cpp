@@ -265,6 +265,7 @@ Mastermind::Pegs Mastermind::calculatePegs(char solution[4], char guess[4])
       {
         pegs.white++;
         isSolutionUsed[s] = true;
+        break;
       }
     }
   }
