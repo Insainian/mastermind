@@ -109,11 +109,12 @@ void Mastermind::codeMaker()
     }
     // Display the blacks and whites
     pegs.print();
+    cout << endl;
   }
   // Display losing message
+  cout << "Computer wins! Better luck next time!" << endl;
   cout << "Computer's code: ";
   printSolution(solution, true);
-  cout << "Computer wins! Better luck next time!" << endl;
 }
 
 void Mastermind::giveUp(GameRecord gameRecord)

@@ -3,24 +3,62 @@
 #include <iostream>
 using namespace std;
 
+void menu();
+void howToPlay();
+
 int main()
 {
   Mastermind mastermind;
-  mastermind.codeMaker();
+  int choice;
 
-  // Ask user to write their code
-  // cout << "Write down a secret code consisting of a series of 4 colors." << endl;
-  // cout << "You can use the following colors: R, G, B, Y, W, K." << endl;
-  // cout << "Please put a white peg if the computer guesses a color right" << endl;
-  // cout << "and a black peg if it guesses a color and its position right" << endl
-  //      << endl;
+  cout << "Welcome to Mastermind!" << endl;
+  do
+  {
+    cout << endl;
+    menu();
+    cin >> choice;
 
-  // Tell user rules of game
-  // cout << "Guess a secret code consisting of as series of 4 colors." << endl;
-  // cout << "You can use the following colors: R, G, B, Y, W, K." << endl;
-  // cout << "You will be given a white peg if you guessed a color right" << endl;
-  // cout << "and a black peg if you guessed a color and its position right" << endl
-  //      << endl;
-
+    cout << endl;
+    switch (choice)
+    {
+    case 1:
+      howToPlay();
+      break;
+    case 2:
+      mastermind.codeBreaker();
+      break;
+    case 3:
+      mastermind.codeMaker();
+      break;
+    case 9:
+      break;
+    default:
+      cout << "Please only enter a number from the choices" << endl;
+      break;
+    }
+  } while (choice != 9);
+  cout << "Thanks for playing!" << endl << endl;
   return 0;
+}
+
+void menu()
+{
+  cout << "Menu: " << endl;
+  cout << "1. How to play." << endl;
+  cout << "2. Computer guesses your code." << endl;
+  cout << "3. You guess the computer's code." << endl;
+  cout << "9. Quit." << endl;
+  cout << "Choose an option: ";
+}
+
+void howToPlay()
+{
+  cout << "Mastermind is a game that invovles making or guessing a secret code consisting" << endl;
+  cout << "of a series of 4 \"code pegs\" among the following colors: R, G, B, Y, W, K." << endl
+       << endl;
+  cout << "The code-maker provides \"key pegs\" to show the accuracy of the code-breaker's guess." << endl
+       << endl;
+  cout << "The black \"key peg\" means that a guessed \"code peg\" is the same color and in the same position as" << endl;
+  cout << "a solution \"code peg\". White \"key pegs\" mean that a guessed \"code peg\" is the same color as" << endl;
+  cout << "a solution \"code peg\", but not in the same position." << endl;
 }
