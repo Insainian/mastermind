@@ -79,6 +79,7 @@ void Mastermind::codeMaker()
 {
   char guess[4];
   char solution[4];
+  char errorColor;
   Pegs pegs;
   // Randomly generate solution
   int randSolutionIndex = getRandomSolutionIndex();
@@ -92,11 +93,25 @@ void Mastermind::codeMaker()
   for (int guessNum = 0; guessNum < 10; guessNum++)
   {
     // Get the user's next guess
-    cout << "Enter guess #" << guessNum + 1 << ": ";
-    for (int i = 0; i < 4; i++)
+    do
     {
-      cin >> guess[i];
-    }
+      cout << "Enter guess #" << guessNum + 1 << ": ";
+      for (int i = 0; i < 4; i++)
+      {
+        cin >> guess[i];
+      }
+
+      errorColor = validateCode(guess);
+
+      if (errorColor != ' ')
+      {
+        cout << endl;
+        cout << "You entered a wrong color: " << errorColor << endl;
+        cout << "Please only enter one of the following colors: B, G, Y, R, W, K" << endl
+             << endl;
+      }
+
+    } while (errorColor != ' ');
 
     // Calculate the blacks and whites
     pegs = calculatePegs(solution, guess);
@@ -189,6 +204,27 @@ int Mastermind::getRandomSolutionIndex()
   solutionIndex = (rand() % (MAX_VALUE - MIN_VALUE + 1)) + MIN_VALUE;
 
   return solutionIndex;
+}
+
+char Mastermind::validateCode(char code[4])
+{
+  bool found = false;
+  for (int c = 0; c < 4; c++)
+  {
+    found = false;
+    for (int s = 0; s < 6; s++)
+    {
+      if (code[c] == colors[s])
+      {
+        found = true;
+      }
+    }
+    if (!found)
+    {
+      return code[c];
+    }
+  }
+  return ' ';
 }
 
 int Mastermind::getPossibleSolution()

@@ -131,6 +131,8 @@ private:
     int getRandomSolutionIndex();
 
     static char colors[6];
+
+    char validateCode(char code[4]);    
 };
 
 #endif // __MASTERMIND_H__
