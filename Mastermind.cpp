@@ -5,7 +5,7 @@
 #include <ctime>
 using namespace std;
 
-char Mastermind::colors[6] = {'B', 'G', 'Y', 'R', 'W', 'K'};
+char Mastermind::colors[MAX_COLORS] = {'B', 'G', 'Y', 'R', 'W', 'K'};
 
 Mastermind::Mastermind()
 {
@@ -16,9 +16,9 @@ Mastermind::~Mastermind()
 {
 }
 
-void Mastermind::printSolution(char solution[4], bool printEndLine)
+void Mastermind::printSolution(char solution[CODE_LENGTH], bool printEndLine)
 {
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < CODE_LENGTH; i++)
   {
     cout << solution[i] << " ";
   }
@@ -32,7 +32,7 @@ void Mastermind::codeBreaker()
   int possibleSolutionIndex;
 
   // Start loop (only 10 guesses)
-  for (int guessNum = 0; guessNum < 10; guessNum++)
+  for (int guessNum = 0; guessNum < GAME_LENGTH; guessNum++)
   {
     // Get the next guess
     possibleSolutionIndex = guessNum == 0 ? getRandomSolutionIndex() : getPossibleSolution();
@@ -51,7 +51,7 @@ void Mastermind::codeBreaker()
     printSolution(possibleSolutions[possibleSolutionIndex].solution);
 
     // Record the guess
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < CODE_LENGTH; i++)
     {
       gameRecord.entries[guessNum].guess[i] = possibleSolutions[possibleSolutionIndex].solution[i];
     }
@@ -62,7 +62,7 @@ void Mastermind::codeBreaker()
     gameRecord.length++;
 
     // If the code has been properly guessed,
-    if (gameRecord.entries[guessNum].pegs.black == 4)
+    if (gameRecord.entries[guessNum].pegs.black == MAX_PEGS)
     {
       cout << "Computer wins! Better luck next time!" << endl;
       return;
@@ -77,26 +77,26 @@ void Mastermind::codeBreaker()
 
 void Mastermind::codeMaker()
 {
-  char guess[4];
-  char solution[4];
+  char guess[CODE_LENGTH];
+  char solution[CODE_LENGTH];
   char errorColor;
   Pegs pegs;
   // Randomly generate solution
   int randSolutionIndex = getRandomSolutionIndex();
 
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < CODE_LENGTH; i++)
   {
     solution[i] = possibleSolutions[randSolutionIndex].solution[i];
   }
 
   // Start loop (only 10 guesses from user)
-  for (int guessNum = 0; guessNum < 10; guessNum++)
+  for (int guessNum = 0; guessNum < GAME_LENGTH; guessNum++)
   {
     // Get the user's next guess
     do
     {
       cout << "Enter guess #" << guessNum + 1 << ": ";
-      for (int i = 0; i < 4; i++)
+      for (int i = 0; i < CODE_LENGTH; i++)
       {
         cin >> guess[i];
       }
@@ -135,11 +135,11 @@ void Mastermind::codeMaker()
 void Mastermind::giveUp(GameRecord gameRecord)
 {
   Pegs pegs;
-  char solution[4];
+  char solution[CODE_LENGTH];
 
   // Get the user's solution
   cout << "I give up, what is your code: ";
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < CODE_LENGTH; i++)
   {
     cin >> solution[i];
   }
@@ -171,9 +171,9 @@ Mastermind::Pegs Mastermind::getUserPegs()
   return pegs;
 }
 
-void Mastermind::eliminateImpossibleSolutions(char guess[4], Pegs pegs)
+void Mastermind::eliminateImpossibleSolutions(char guess[CODE_LENGTH], Pegs pegs)
 {
-  for (int i = 0; i < 1296; i++)
+  for (int i = 0; i < MAX_SOLUTIONS; i++)
   {
     if (possibleSolutions[i].isPossible == true)
     {
@@ -191,7 +191,7 @@ void Mastermind::eliminateImpossibleSolutions(char guess[4], Pegs pegs)
 int Mastermind::getRandomSolutionIndex()
 {
   const int MIN_VALUE = 0;
-  const int MAX_VALUE = 1296;
+  const int MAX_VALUE = MAX_SOLUTIONS - 1;
 
   int solutionIndex;
 
@@ -206,13 +206,13 @@ int Mastermind::getRandomSolutionIndex()
   return solutionIndex;
 }
 
-char Mastermind::validateCode(char code[4])
+char Mastermind::validateCode(char code[CODE_LENGTH])
 {
   bool found = false;
-  for (int c = 0; c < 4; c++)
+  for (int c = 0; c < CODE_LENGTH; c++)
   {
     found = false;
-    for (int s = 0; s < 6; s++)
+    for (int s = 0; s < MAX_COLORS; s++)
     {
       if (code[c] == colors[s])
       {
@@ -229,7 +229,7 @@ char Mastermind::validateCode(char code[4])
 
 int Mastermind::getPossibleSolution()
 {
-  for (int i = 0; i < 1296; i++)
+  for (int i = 0; i < MAX_SOLUTIONS; i++)
   {
     if (possibleSolutions[i].isPossible == true)
     {
@@ -243,13 +243,13 @@ void Mastermind::initializeAllPossibleSolutions()
 {
   int solutionIndex = 0;
 
-  for (int a = 0; a < 6; a++)
+  for (int a = 0; a < MAX_COLORS; a++)
   {
-    for (int b = 0; b < 6; b++)
+    for (int b = 0; b < MAX_COLORS; b++)
     {
-      for (int c = 0; c < 6; c++)
+      for (int c = 0; c < MAX_COLORS; c++)
       {
-        for (int d = 0; d < 6; d++)
+        for (int d = 0; d < MAX_COLORS; d++)
         {
           possibleSolutions[solutionIndex].isPossible = true;
           possibleSolutions[solutionIndex].solution[0] = colors[a];
@@ -265,14 +265,14 @@ void Mastermind::initializeAllPossibleSolutions()
   possibleSolutionCount = solutionIndex;
 }
 
-Mastermind::Pegs Mastermind::calculatePegs(char solution[4], char guess[4])
+Mastermind::Pegs Mastermind::calculatePegs(char solution[CODE_LENGTH], char guess[CODE_LENGTH])
 {
   Pegs pegs;
 
-  bool isSolutionUsed[4] = {false, false, false, false};
+  bool isSolutionUsed[CODE_LENGTH] = {false, false, false, false};
 
   // Find black-pegs first
-  for (int g = 0; g < 4; g++)
+  for (int g = 0; g < CODE_LENGTH; g++)
   {
     if (guess[g] == solution[g])
     {
@@ -282,7 +282,7 @@ Mastermind::Pegs Mastermind::calculatePegs(char solution[4], char guess[4])
   }
 
   // Find white-pegs next
-  for (int g = 0; g < 4; g++)
+  for (int g = 0; g < CODE_LENGTH; g++)
   {
     // Skip if it is a black-peg
     if (guess[g] == solution[g])
@@ -290,7 +290,7 @@ Mastermind::Pegs Mastermind::calculatePegs(char solution[4], char guess[4])
       continue;
     }
 
-    for (int s = 0; s < 4; s++)
+    for (int s = 0; s < CODE_LENGTH; s++)
     {
       // A white-peg cannot be the same index, so skip if it is the same index
       if (s == g)

@@ -7,6 +7,13 @@ using namespace std;
 class Mastermind
 {
 public:
+    static const int MAX_SOLUTIONS = 1296;
+    static const int CODE_LENGTH = 4;
+    static const int GAME_LENGTH = 10;
+    static const int MAX_PEGS = CODE_LENGTH;
+    static const int MIN_PEGS = 0;
+    static const int MAX_COLORS = 6;
+
     struct Pegs
     {
         int black = 0;
@@ -15,12 +22,12 @@ public:
         bool isValid()
         {
             int total = black + white;
-            return (total >= 0 && total <= 4);
+            return (total >= MIN_PEGS && total <= MAX_PEGS);
         }
 
         bool isSolution()
         {
-            return (black == 4 && white == 0);
+            return (black == MAX_PEGS && white == MIN_PEGS);
         }
 
         bool operator==(const Pegs &that)
@@ -48,7 +55,7 @@ public:
 
     void codeMaker();
 
-    int numPossibleSolutions = 1296;
+    int numPossibleSolutions = MAX_SOLUTIONS;
 
     static Pegs calculatePegs(char solution[], char guess[]);
 
@@ -58,14 +65,14 @@ public:
 private:
     struct PossibleSolution
     {
-        char solution[4];
+        char solution[CODE_LENGTH];
         bool isPossible;
     };
 
     struct GameRecordEntry
     {
         Pegs pegs;
-        char guess[4];
+        char guess[CODE_LENGTH];
         void print()
         {
             printSolution(guess, true);
@@ -73,7 +80,7 @@ private:
             cout << endl;
         }
 
-        bool validatePegsWithSolution(char solution[4])
+        bool validatePegsWithSolution(char solution[CODE_LENGTH])
         {
             Pegs expectedPegs = calculatePegs(solution, guess);
             return (pegs == expectedPegs);
@@ -82,7 +89,7 @@ private:
 
     struct GameRecord
     {
-        GameRecordEntry entries[10];
+        GameRecordEntry entries[GAME_LENGTH];
         int length = 0;
         void print()
         {
@@ -93,7 +100,7 @@ private:
             }
         }
 
-        void validateGame(char solution[4])
+        void validateGame(char solution[CODE_LENGTH])
         {
             for (int i = 0; i < length; i++)
             {
@@ -111,7 +118,7 @@ private:
         }
     };
 
-    static void printSolution(char solution[4], bool printEndLine = true);
+    static void printSolution(char solution[CODE_LENGTH], bool printEndLine = true);
 
     int getPossibleSolution();
 
@@ -121,18 +128,18 @@ private:
 
     Pegs getUserPegs();
 
-    void eliminateImpossibleSolutions(char guess[4], Pegs pegs);
+    void eliminateImpossibleSolutions(char guess[CODE_LENGTH], Pegs pegs);
 
-    PossibleSolution possibleSolutions[1296];
+    PossibleSolution possibleSolutions[MAX_SOLUTIONS];
     int possibleSolutionCount;
 
     GameRecord gameRecord;
 
     int getRandomSolutionIndex();
 
-    static char colors[6];
+    static char colors[MAX_COLORS];
 
-    char validateCode(char code[4]);    
+    char validateCode(char code[CODE_LENGTH]);
 };
 
 #endif // __MASTERMIND_H__
