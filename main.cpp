@@ -8,12 +8,13 @@ void howToPlay();
 
 int main()
 {
-  Mastermind mastermind;
   int choice;
 
   cout << "Welcome to Mastermind!" << endl;
   do
   {
+    Mastermind mastermind;
+    
     cout << endl;
     menu();
     cin >> choice;
@@ -37,7 +38,8 @@ int main()
       break;
     }
   } while (choice != 9);
-  cout << "Thanks for playing!" << endl << endl;
+  cout << "Thanks for playing!" << endl
+       << endl;
   return 0;
 }
 
